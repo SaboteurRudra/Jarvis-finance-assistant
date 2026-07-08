@@ -1,0 +1,11 @@
+# Database files (Do not upload your personal expenses to GitHub!)
+*.db
+finance.db
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables (Do not upload API keys!)
+.env

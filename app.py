@@ -17,7 +17,7 @@ def home():
     return redirect('/jarvis')
 
 @app.route('/jarvis')
-def index():
+def jarvis():
     return render_template('index.html')
 
 @app.route('/api/expenses', methods=['GET'])

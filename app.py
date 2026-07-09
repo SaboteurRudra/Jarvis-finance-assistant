@@ -7,10 +7,10 @@ from openai import OpenAI
 # 1. Get the absolute path to the directory where app.py lives
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 2. FORCE Flask to look exactly in your specific folders on Render
+# 2. BYPASS THE TEMPLATES FOLDER: Look directly in the main root directory
 app = Flask(
     __name__,
-    template_folder=os.path.join(BASE_DIR, 'templates'),
+    template_folder=BASE_DIR,
     static_folder=os.path.join(BASE_DIR, 'static')
 )
 

@@ -1,12 +1,20 @@
-from flask import Flask, render_template, request, jsonify, redirect
-import sqlite3
 import os
+import sqlite3
 from datetime import datetime
+from flask import Flask, render_template, request, jsonify, redirect
 from openai import OpenAI
 
-app = Flask(__name__)
-
+# 1. Get the absolute path to the directory where app.py lives
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# 2. FORCE Flask to look exactly in your specific folders on Render
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, 'templates'),
+    static_folder=os.path.join(BASE_DIR, 'static')
+)
+
+# 3. Use an absolute path for the database file
 DB_NAME = os.path.join(BASE_DIR, "finance.db")
 
 def get_db_connection():
@@ -14,6 +22,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+# Safely creates your database table if Render spawns a blank file
 def init_db():
     conn = get_db_connection()
     conn.execute('''

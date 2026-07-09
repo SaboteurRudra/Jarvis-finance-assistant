@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Finance Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Finance Assistant</h1>
+            <p class="subtitle">Track your spending, get smart insights.</p>
+        </header>
+        
+        <main>
+            <div class="glass-card add-expense-card">
+                <h2>Add New Expense</h2>
+                <form id="expense-form">
+                    <div class="input-group">
+                        <input type="number" id="amount" step="0.01" required placeholder="Amount ($)">
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="category" required placeholder="Category (e.g. Food)">
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="description" required placeholder="Description">
+                    </div>
+                    <button type="submit" class="btn-primary">Add Expense</button>
+                </form>
+            </div>
+
+            <div class="glass-card advice-card">
+                <h2>AI Financial Advice</h2>
+                <button id="get-advice-btn" class="btn-secondary">Ask the AI</button>
+                <div id="advice-content" class="hidden">
+                    <div class="loader hidden" id="advice-loader"></div>
+                    <p id="advice-text"></p>
+                </div>
+            </div>
+
+            <div class="glass-card expenses-card">
+                <div class="expenses-header">
+                    <h2>Recent Expenses</h2>
+                    <input type="text" id="search-input" placeholder="Search category...">
+                </div>
+                
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <span class="stat-label">Total Spent</span>
+                        <span class="stat-value" id="total-spent">$0.00</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Average</span>
+                        <span class="stat-value" id="average-spent">$0.00</span>
+                    </div>
+                </div>
+
+                <ul id="expenses-list" class="expenses-list">
+                    <!-- Expenses injected via JS -->
+                </ul>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

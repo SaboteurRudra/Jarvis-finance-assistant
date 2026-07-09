@@ -5,12 +5,31 @@ from datetime import datetime
 from openai import OpenAI
 
 app = Flask(__name__)
-DB_NAME = "finance.db"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_NAME = os.path.join(BASE_DIR, "finance.db")
 
 def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
     return conn
+
+def init_db():
+    conn = get_db_connection()
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS expenses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT NOT NULL,
+            amount REAL NOT NULL,
+            category TEXT NOT NULL,
+            description TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Run the database initialization right when the app starts up
+init_db()
 
 @app.route('/')
 def home():
@@ -24,12 +43,16 @@ def jarvis():
 def get_expenses():
     category = request.args.get('category', '')
     conn = get_db_connection()
-    if category:
-        expenses = conn.execute("SELECT * FROM expenses WHERE category LIKE ? ORDER BY date DESC", (f'%{category}%',)).fetchall()
-    else:
-        expenses = conn.execute("SELECT * FROM expenses ORDER BY date DESC LIMIT 50").fetchall()
-    conn.close()
-    return jsonify([dict(ix) for ix in expenses])
+    try:
+        if category:
+            expenses = conn.execute("SELECT * FROM expenses WHERE category LIKE ? ORDER BY date DESC", (f'%{category}%',)).fetchall()
+        else:
+            expenses = conn.execute("SELECT * FROM expenses ORDER BY date DESC LIMIT 50").fetchall()
+        return jsonify([dict(ix) for ix in expenses])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
 
 @app.route('/api/expenses', methods=['POST'])
 def add_expense():
